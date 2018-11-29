@@ -1,0 +1,24 @@
+{
+  "name": "cytoscape-even-parent",
+  "description": "cytoscape layout extension to place children of a node evenly underneath it&#39;s parent",
+  "main": "cytoscape-even-parent.js",
+  "dependencies": {
+    "cytoscape": "^3.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ciena/cytoscape-even-parent.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "cytoscape",
+    "cytoscape-extension"
+  ],
+  "license": "MIT"
+}
