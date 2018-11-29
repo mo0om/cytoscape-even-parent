@@ -1,0 +1,189 @@
+<!DOCTYPE>
+
+<html>
+
+	<head>
+		<title>cytoscape-even-parent.js demo</title>
+
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+		<script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+
+		<!-- for testing with local version of cytoscape.js -->
+		<!--<script src="../cytoscape.js/build/cytoscape.js"></script>-->
+
+		<script src="cytoscape-even-parent.js"></script>
+
+		<style>
+			body {
+				font-family: helvetica neue, helvetica, liberation sans, arial, sans-serif;
+				font-size: 14px;
+			}
+
+			#cy {
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				z-index: 999;
+			}
+
+			h1 {
+				opacity: 0.5;
+				font-size: 1em;
+				font-weight: bold;
+			}
+
+			.sliders {
+				z-index: 9999;
+				position: absolute;
+				right: 10px;
+				width: 300px;
+			}
+
+			.line {
+				display: flex;
+			}
+
+			label {
+				width: 125px;
+				text-align: right;
+			}
+		</style>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function(){
+
+				var cy = window.cy = cytoscape({
+					container: document.getElementById('cy'),
+
+					// demo your layout
+					layout: {
+						name: 'evenParent',
+                        horizontalPadding: 1000,
+                        verticalPadding: 2000,
+                        fontSize: 1000,
+                        edgeSize: 200
+					},
+
+					style: [
+						{
+							selector: 'node',
+							style: {
+								'content': 'data(name)',
+								'text-valign': 'center'
+							}
+						},
+
+						{
+							selector: 'edge',
+							style: {
+								'curve-style': 'bezier',
+								'target-arrow-shape': 'triangle'
+							}
+						}
+					],
+
+					elements: {
+						nodes: [
+							{ data: { id: 'j', name: 'Jerry' } },
+							{ data: { id: 'e', name: 'Elaine'} },
+							{ data: { id: 'k', name: 'Kramer'} },
+							{ data: { id: 'g', name: 'George'} },
+							{ data: { id: 'm', name: 'Martin'} },
+							{ data: { id: 'p', name: 'Philippe'} },
+							{ data: { id: 'l', name: 'Louis'} },
+							{ data: { id: 'ge', name: 'Genevieve'} },
+							{ data: { id: 'le', name: 'Leo'} },
+							{ data: { id: 'la', name: 'Larry'} },
+							{ data: { id: 'lo', name: 'Logaina'} },
+							{ data: { id: 'ju', name: 'Julien'} },
+							{ data: { id: 's', name: 'Sebastian'} },
+							{ data: { id: 'd', name: 'Denis'} },
+							{ data: { id: 'jo', name: 'Joseph'} },
+							{ data: { id: 'f', name: 'Fadi'} }
+
+						],
+						edges: [
+							{ data: { source: 'j', target: 'e' } },
+							{ data: { source: 'j', target: 'k' } },
+							{ data: { source: 'j', target: 'g' } },
+							{ data: { source: 'e', target: 'm' } },
+							{ data: { source: 'e', target: 'p' } },
+							{ data: { source: 'e', target: 'l' } },
+							{ data: { source: 'e', target: 'ge' } },
+							{ data: { source: 'e', target: 'le' } },
+							{ data: { source: 'k', target: 'la' } },
+							{ data: { source: 'k', target: 'lo' } },
+							{ data: { source: 'm', target: 'ju' } },
+							{ data: { source: 'm', target: 's' } },
+							{ data: { source: 'm', target: 'd' } },
+							{ data: { source: 'm', target: 'jo' } },
+							{ data: { source: 'm', target: 'f' } }
+						]
+					}
+				});
+                let changeableAttributes = ["childrenSize", "hpadding", "vpadding", "edgeSize", "fontSize"]
+                changeableAttributes.forEach((aCheangableAttribute) => {
+                    modifyInput(aCheangableAttribute);
+				});
+				function modifyInput (attrName) {
+                    let anAttr = document.getElementById(attrName)
+                    anAttr.oninput = function () {
+                        document.getElementById(`${attrName}Value`).innerHTML = this.value;
+                        runLayout();
+                    };
+                    document.getElementById(`${attrName}Value`).innerHTML = anAttr.value;
+				}
+                function runLayout () {
+                    let layout = cy.layout({
+                        name: 'evenParent',
+                        edgeSize: document.getElementById("edgeSize").value,
+                        horizontalPadding: document.getElementById("hpadding").value,
+                        verticalPadding: document.getElementById("vpadding").value,
+                        fontSize: document.getElementById("fontSize").value,
+                        childrenSize: document.getElementById("childrenSize").value
+                    });
+                    layout.run();
+				}
+			});
+
+		</script>
+	</head>
+
+	<body>
+		<h1>cytoscape-even-parent demo</h1>
+
+		<div id="cy"></div>
+		<div class="sliders">
+			<div class="line">
+				<label for="childrenSize">childrenSize: </label>
+				<input id="childrenSize" name="childrenSize" type="range" min="1" max="5" step=".01" value="1" />
+				<div id="childrenSizeValue" class="value"></div>
+			</div>
+			<div class="line">
+				<label for="hpadding">horizontal padding: </label>
+				<input id="hpadding" name="hpadding" type="range" min="0" max="100000" step="1" value="0" />
+				<div id="hpaddingValue" class="value"></div>
+			</div>
+			<div class="line">
+				<label for="vpadding">vertical padding: </label>
+				<input id="vpadding" name="vpadding" type="range" min="0" max="10000" step="1" value="2000" />
+				<div id="vpaddingValue" class="value"></div>
+			</div>
+			<div class="line">
+				<label for="edgeSize">Edge size: </label>
+				<input id="edgeSize" name="edgeSize" type="range" min="0" max="1000" step="1" value="200" />
+				<div id="edgeSizeValue" class="value"></div>
+			</div>
+			<div class="line">
+				<label for="fontSize">Font size: </label>
+				<input id="fontSize" name="fontSize" type="range" min="100" max="10000" step="1" value="1000" />
+				<div id="fontSizeValue" class="value"></div>
+			</div>
+		</div>
+
+	</body>
+
+</html>
