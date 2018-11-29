@@ -52,8 +52,20 @@ Plain HTML/JS has the extension registered for you automatically, because no `re
 
 ## API
 
-TODO describe the API of the extension here.
+Add the layout on creation of the cytoscape instance. A few options are available.
 
+```
+... instanciation of cytoscape ...
+    layout: {
+        name: 'evenParent',
+        childrenSize: 1,          // 1 to ~
+        horizontalPadding: 1000,  // 0 to ~
+        verticalPadding: 2000,    // 0 to ~
+        fontSize: 1000,           // 0 to ~
+        edgeSize: 200             // 0 to ~
+    },
+...
+```
 
 ## Build targets
 
