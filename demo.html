@@ -50,10 +50,67 @@
 				width: 125px;
 				text-align: right;
 			}
+
+			.node-controller {
+				z-index: 9999;
+				position: absolute;
+				left: 10px;
+				width: 300px;
+				display: flex;
+				flex-direction: column;
+
+
+			}
+
+			.node-controller .line {
+				padding-bottom: 5px;
+			}
+
+			button {
+				width: 125px;
+			}
 		</style>
 
 		<script>
 			document.addEventListener('DOMContentLoaded', function(){
+			    let nodes = [
+                    { data: { id: 'j', name: 'Jerry' } },
+                    { data: { id: 'e', name: 'Elaine'} },
+                    { data: { id: 'k', name: 'Kramer'} },
+                    { data: { id: 'g', name: 'George'} },
+                    { data: { id: 'm', name: 'Martin'} },
+                    { data: { id: 'p', name: 'Philippe'} },
+                    { data: { id: 'l', name: 'Louis'} },
+                    { data: { id: 'ge', name: 'Genevieve'} },
+                    { data: { id: 'le', name: 'Leo'} },
+                    { data: { id: 'la', name: 'Larry'} },
+                    { data: { id: 'lo', name: 'Logaina'} },
+                    { data: { id: 'ju', name: 'Julien'} },
+                    { data: { id: 's', name: 'Sebastian'} },
+                    { data: { id: 'd', name: 'Denis'} },
+                    { data: { id: 'jo', name: 'Joseph'} },
+                    { data: { id: 'f', name: 'Fadi'} },
+                    { data: { id: 'david', name: 'David'} },
+
+
+                ];
+				let edges = [
+                    { data: { source: 'j', target: 'e' } },
+                    { data: { source: 'j', target: 'k' } },
+                    { data: { source: 'j', target: 'g' } },
+                    { data: { source: 'e', target: 'm' } },
+                    { data: { source: 'e', target: 'p' } },
+                    { data: { source: 'e', target: 'l' } },
+                    { data: { source: 'e', target: 'ge' } },
+                    { data: { source: 'e', target: 'le' } },
+                    { data: { source: 'k', target: 'la' } },
+                    { data: { source: 'k', target: 'lo' } },
+                    { data: { source: 'm', target: 'ju' } },
+                    { data: { source: 'm', target: 's' } },
+                    { data: { source: 'm', target: 'd' } },
+                    { data: { source: 'm', target: 'jo' } },
+                    { data: { source: 'm', target: 'f' } }
+                ];
 
 				var cy = window.cy = cytoscape({
 					container: document.getElementById('cy'),
@@ -61,7 +118,6 @@
 					// demo your layout
 					layout: {
 						name: 'evenParent',
-                        childrenSize: 1,
                         horizontalPadding: 1000,
                         verticalPadding: 2000,
                         fontSize: 1000,
@@ -87,42 +143,8 @@
 					],
 
 					elements: {
-						nodes: [
-							{ data: { id: 'j', name: 'Jerry' } },
-							{ data: { id: 'e', name: 'Elaine'} },
-							{ data: { id: 'k', name: 'Kramer'} },
-							{ data: { id: 'g', name: 'George'} },
-							{ data: { id: 'm', name: 'Martin'} },
-							{ data: { id: 'p', name: 'Philippe'} },
-							{ data: { id: 'l', name: 'Louis'} },
-							{ data: { id: 'ge', name: 'Genevieve'} },
-							{ data: { id: 'le', name: 'Leo'} },
-							{ data: { id: 'la', name: 'Larry'} },
-							{ data: { id: 'lo', name: 'Logaina'} },
-							{ data: { id: 'ju', name: 'Julien'} },
-							{ data: { id: 's', name: 'Sebastian'} },
-							{ data: { id: 'd', name: 'Denis'} },
-							{ data: { id: 'jo', name: 'Joseph'} },
-							{ data: { id: 'f', name: 'Fadi'} }
-
-						],
-						edges: [
-							{ data: { source: 'j', target: 'e' } },
-							{ data: { source: 'j', target: 'k' } },
-							{ data: { source: 'j', target: 'g' } },
-							{ data: { source: 'e', target: 'm' } },
-							{ data: { source: 'e', target: 'p' } },
-							{ data: { source: 'e', target: 'l' } },
-							{ data: { source: 'e', target: 'ge' } },
-							{ data: { source: 'e', target: 'le' } },
-							{ data: { source: 'k', target: 'la' } },
-							{ data: { source: 'k', target: 'lo' } },
-							{ data: { source: 'm', target: 'ju' } },
-							{ data: { source: 'm', target: 's' } },
-							{ data: { source: 'm', target: 'd' } },
-							{ data: { source: 'm', target: 'jo' } },
-							{ data: { source: 'm', target: 'f' } }
-						]
+						nodes: nodes,
+						edges: edges
 					}
 				});
                 let changeableAttributes = ["childrenSize", "hpadding", "vpadding", "edgeSize", "fontSize"]
@@ -148,6 +170,83 @@
                     });
                     layout.run();
 				}
+
+				function addOptionToSelect (selectID, name, id) {
+                    let nodeSelector = document.getElementById(selectID);
+                    nodeSelector.options[nodeSelector.options.length] = new Option(name, id);
+				}
+				function resetCheckboxes () {
+                    document.getElementById("nodes-select").options.length = 0;
+                    document.getElementById("nodes-select-remove").options.length = 0;
+                    nodes.forEach((aNode) => {
+                        addOptionToSelect("nodes-select", aNode.data.name, aNode.data.id)
+                    });
+                    edges.forEach((anEdge) => {
+                        if (anEdge.data.target === 'j') {
+                            addNode(anEdge.data.source)
+                        } else if (anEdge.data.source === 'j' ) {
+                            addNode(anEdge.data.target)
+                        }
+                        function addNode (id) {
+                            addOptionToSelect("nodes-select-remove", cy.elements(`node#${id}`).data('name'), id);
+                        }
+                    });
+				};
+                resetCheckboxes();
+
+				// Populate select boxes
+                let parentSelector = document.getElementById("nodes-select")
+                parentSelector.onchange = function () {
+                    document.getElementById("nodes-select-remove").options.length = 0;
+                    let cytoParent = cy.elements(`node#${parentSelector.value}`)
+                    cytoParent.outgoers("node").forEach((aChild) => {
+                        addOptionToSelect("nodes-select-remove", aChild.data().name, aChild.id());
+					})
+				};
+
+				// Add actions
+                let buttonAdd = document.getElementById("buttonAdd");
+                buttonAdd.onclick = function () {
+                    let parent = document.getElementById("nodes-select");
+                    let inputAdd = document.getElementById("inputAdd");
+
+					// Add new value to cytoscape
+					cy.add([
+						{ group: 'nodes', data: { id: inputAdd.value, name: inputAdd.value }},
+						{ group: 'edges', data: { id: `${inputAdd.value}${parent.value}`, source: parent.value, target: inputAdd.value}}
+					]);
+
+                    runLayout();
+
+                    // Add new value to DOM
+                    nodes.push({data: { id: inputAdd.value, name: inputAdd.value }});
+                    edges.push({ data: { source: parent.value, target: inputAdd.value } });
+					resetCheckboxes();
+				};
+
+                // Remove action
+                let buttonRemove = document.getElementById("buttonRemove");
+                buttonRemove.onclick = function () {
+                    let parent = document.getElementById("nodes-select");
+                    let inputRemove = document.getElementById("nodes-select-remove");
+
+                    // Remove value from cytoscape
+					let elementToRemove = cy.elements(`node#${inputRemove.value}`);
+                    let edgesToRemove = elementToRemove.connectedEdges();
+                    cy.remove(edgesToRemove);
+                    cy.remove(elementToRemove);
+
+                    runLayout();
+
+                    // Remove value from DOM
+                    nodes = nodes.filter((aNode) => {
+                        return aNode.data.id !== inputAdd.value;
+					});
+                    edges = edges.filter((anEdge) => {
+                        return anEdge.data.target !== inputAdd.value || anEdge.data.source !== inputAdd.value
+                    });
+                    resetCheckboxes();
+                };
 			});
 
 		</script>
@@ -157,6 +256,20 @@
 		<h1>cytoscape-even-parent demo</h1>
 
 		<div id="cy"></div>
+		<div class="node-controller">
+			<div class="line">
+				<label for="nodes-select">Parent: </label>
+				<select name="nodes-select" id="nodes-select"></select>
+			</div>
+			<div class="line">
+				<button id="buttonAdd" class="add">Add</button>
+				<input id="inputAdd" name="inputAdd" type="text" />
+			</div>
+			<div class="line">
+				<button id="buttonRemove">Remove</button>
+				<select name="nodes-select" id="nodes-select-remove"></select>
+			</div>
+		</div>
 		<div class="sliders">
 			<div class="line">
 				<label for="childrenSize">childrenSize: </label>
@@ -164,22 +277,22 @@
 				<div id="childrenSizeValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="hpadding">horizontalPadding: </label>
+				<label for="hpadding">horizontal padding: </label>
 				<input id="hpadding" name="hpadding" type="range" min="0" max="100000" step="1" value="0" />
 				<div id="hpaddingValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="vpadding">verticalPadding: </label>
+				<label for="vpadding">vertical padding: </label>
 				<input id="vpadding" name="vpadding" type="range" min="0" max="10000" step="1" value="2000" />
 				<div id="vpaddingValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="edgeSize">edgeSize: </label>
+				<label for="edgeSize">Edge size: </label>
 				<input id="edgeSize" name="edgeSize" type="range" min="0" max="1000" step="1" value="200" />
 				<div id="edgeSizeValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="fontSize">fontSize: </label>
+				<label for="fontSize">Font size: </label>
 				<input id="fontSize" name="fontSize" type="range" min="100" max="10000" step="1" value="1000" />
 				<div id="fontSizeValue" class="value"></div>
 			</div>
