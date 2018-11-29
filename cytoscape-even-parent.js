@@ -139,7 +139,7 @@ var register = function register(cytoscape) {
 
 if (typeof cytoscape !== 'undefined') {
   // expose to global cytoscape (i.e. window.cytoscape)
-  register(cytoscape);
+  register(window.cytoscape);
 }
 
 module.exports = register;
@@ -164,7 +164,7 @@ var defaults = Object.freeze({
   animate: undefined, // whether or not to animate the layout
   animationDuration: undefined, // duration of animation in ms, if enabled
   animationEasing: undefined, // easing of animation, if enabled
-  animateFilter: function animateFilter(node, i) {
+  animateFilter: function animateFilter() {
     return true;
   }, // whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
 
@@ -187,7 +187,6 @@ var defaults = Object.freeze({
   stop: function stop() {}, // on layoutstop
 
   // User options
-  multiplicator: 1,
   startingSize: {
     w: 10000,
     h: 10000
@@ -211,7 +210,6 @@ var Layout = function () {
     value: function run() {
       var layout = this;
       var options = this.options;
-      var cy = options.cy;
       var eles = options.eles;
       var nodes = eles.nodes();
 
@@ -223,7 +221,7 @@ var Layout = function () {
         topNode.style("height", options.startingSize.h);
         topNode.style("font-size", options.fontSize + "px");
         topNode.position({
-          x: i * options.startingSize.w * options.multiplicator + options.horizontalPadding * i,
+          x: i * options.startingSize.w + options.horizontalPadding * i,
           y: 0
         });
         topNode.connectedEdges().style('width', options.edgeSize);
@@ -239,7 +237,7 @@ var Layout = function () {
           var newEdgeSize = es / outgoers.length;
           var width = node.width() * options.childrenSize / outgoers.length;
           var height = node.height() * options.childrenSize / outgoers.length;
-          var spaceBetweenNodes = width * options.multiplicator + newHorizontalPadding;
+          var spaceBetweenNodes = width + newHorizontalPadding;
           outgoers.forEach(function (outgoer, i) {
             outgoer.connectedEdges().style('width', newEdgeSize);
             outgoer.style("width", width);
