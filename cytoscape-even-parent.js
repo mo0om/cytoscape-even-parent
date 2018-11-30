@@ -195,7 +195,8 @@ var defaults = Object.freeze({
   verticalPadding: 2000,
   fontSize: 1000,
   edgeSize: 200,
-  childrenSize: 1
+  childrenSize: 1,
+  horizontalSpread: false
 });
 
 var Layout = function () {
@@ -217,13 +218,12 @@ var Layout = function () {
 
       // Place top nodes
       topNodes.forEach(function (topNode, i) {
-        topNode.style("width", options.startingSize.w);
-        topNode.style("height", options.startingSize.h);
+        var startingSize = options.horizontalSpread ? { w: options.startingSize.h, h: options.startingSize.w } : { w: options.startingSize.w, h: options.startingSize.h };
+        topNode.style("width", startingSize.w);
+        topNode.style("height", startingSize.h);
         topNode.style("font-size", options.fontSize + "px");
-        topNode.position({
-          x: i * options.startingSize.w + options.horizontalPadding * i,
-          y: 0
-        });
+        var horizontalSpread = options.horizontalSpread ? { x: 0, y: i * options.startingSize.h + options.verticalPadding * i } : { x: i * options.startingSize.w + options.horizontalPadding * i, y: 0 };
+        topNode.position(horizontalSpread);
         topNode.connectedEdges().style('width', options.edgeSize);
         childrenPlacement(topNode, options.horizontalPadding, options.verticalPadding, options.fontSize, options.edgeSize);
       });
@@ -237,17 +237,21 @@ var Layout = function () {
           var newEdgeSize = es / outgoers.length;
           var width = node.width() * options.childrenSize / outgoers.length;
           var height = node.height() * options.childrenSize / outgoers.length;
-          var spaceBetweenNodes = width + newHorizontalPadding;
+          var spaceBetweenNodes = options.horizontalSpread ? height + newverticalPadding : width + newHorizontalPadding;
           outgoers.forEach(function (outgoer, i) {
             outgoer.connectedEdges().style('width', newEdgeSize);
             outgoer.style("width", width);
             outgoer.style("height", height);
             outgoer.style("font-size", newFontSize + "px");
-            var startingPos = node.position().x - spaceBetweenNodes / 2 * (outgoers.length - 1);
-            outgoer.position({
+            var startingPos = options.horizontalSpread ? node.position().y - spaceBetweenNodes / 2 * (outgoers.length - 1) : node.position().x - spaceBetweenNodes / 2 * (outgoers.length - 1);
+            var outgoerPosition = options.horizontalSpread ? {
+              x: node.position().x + node.width() / 2 + width / 2 + newHorizontalPadding,
+              y: startingPos + spaceBetweenNodes * i
+            } : {
               x: startingPos + spaceBetweenNodes * i,
               y: node.position().y + node.height() / 2 + height / 2 + newverticalPadding
-            });
+            };
+            outgoer.position(outgoerPosition);
             childrenPlacement(outgoer, newHorizontalPadding, newverticalPadding, newFontSize, newEdgeSize);
           });
         }
