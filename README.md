@@ -58,11 +58,12 @@ Add the layout on creation of the cytoscape instance. A few options are availabl
 ... instanciation of cytoscape ...
     layout: {
         name: 'evenParent',
-        childrenSize: 1,          // 1 to ~
-        horizontalPadding: 1000,  // 0 to ~
-        verticalPadding: 2000,    // 0 to ~
-        fontSize: 1000,           // 0 to ~
-        edgeSize: 200             // 0 to ~
+        childrenSize: 1,          // 1 to ~  ::: Proportion of children/parent
+        horizontalPadding: 1000,  // 0 to ~  ::: Horizontal padding between nodes
+        verticalPadding: 2000,    // 0 to ~  ::: Vertical padding between nodes
+        fontSize: 1000,           // 0 to ~  ::: Size of font
+        edgeSize: 200,            // 0 to ~  ::: Size of edge
+        horizontalSpread: false   // boolean ::: Spread the graph horizontally if true
     },
 ...
 ```

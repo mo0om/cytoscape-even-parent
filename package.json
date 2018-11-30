@@ -1,6 +1,6 @@
 {
   "name": "cytoscape-even-parent",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "cytoscape layout extension to place children of a node evenly underneath it&#39;s parent",
   "main": "cytoscape-even-parent.js",
   "author": {
