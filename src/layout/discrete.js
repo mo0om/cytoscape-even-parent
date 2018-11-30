@@ -35,7 +35,7 @@ const defaults = Object.freeze({
   fontSize: 1000,
   edgeSize: 200,
   childrenSize: 1,
-  horizontalSpread: true
+  horizontalSpread: false
 });
 
 class Layout {
