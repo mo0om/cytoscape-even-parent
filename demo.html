@@ -69,47 +69,60 @@
 			button {
 				width: 125px;
 			}
+
+			#buttonRemove {
+				width: 78px;
+			}
+
+			#nodes-select {
+				width: 85px;
+			}
+
+			#nodes-select-remove {
+				width: 131px;
+			}
+
+			label[for="root-node"] {
+				text-align: left;
+			}
 		</style>
 
 		<script>
 			document.addEventListener('DOMContentLoaded', function(){
 			    let nodes = [
-                    { data: { id: 'j', name: 'Jerry' } },
-                    { data: { id: 'e', name: 'Elaine'} },
-                    { data: { id: 'k', name: 'Kramer'} },
-                    { data: { id: 'g', name: 'George'} },
-                    { data: { id: 'm', name: 'Martin'} },
-                    { data: { id: 'p', name: 'Philippe'} },
-                    { data: { id: 'l', name: 'Louis'} },
-                    { data: { id: 'ge', name: 'Genevieve'} },
-                    { data: { id: 'le', name: 'Leo'} },
-                    { data: { id: 'la', name: 'Larry'} },
-                    { data: { id: 'lo', name: 'Logaina'} },
-                    { data: { id: 'ju', name: 'Julien'} },
-                    { data: { id: 's', name: 'Sebastian'} },
-                    { data: { id: 'd', name: 'Denis'} },
-                    { data: { id: 'jo', name: 'Joseph'} },
-                    { data: { id: 'f', name: 'Fadi'} },
-                    { data: { id: 'david', name: 'David'} },
-
-
+                    { data: { id: 'Jerry', name: 'Jerry' } },
+                    { data: { id: 'Elaine', name: 'Elaine'} },
+                    { data: { id: 'Kramer', name: 'Kramer'} },
+                    { data: { id: 'George', name: 'George'} },
+                    { data: { id: 'Martin', name: 'Martin'} },
+                    { data: { id: 'Philippe', name: 'Philippe'} },
+                    { data: { id: 'Louis', name: 'Louis'} },
+                    { data: { id: 'Genevieve', name: 'Genevieve'} },
+                    { data: { id: 'Leo', name: 'Leo'} },
+                    { data: { id: 'Larry', name: 'Larry'} },
+                    { data: { id: 'Logaina', name: 'Logaina'} },
+                    { data: { id: 'Julien', name: 'Julien'} },
+                    { data: { id: 'Sebastian', name: 'Sebastian'} },
+                    { data: { id: 'Denis', name: 'Denis'} },
+                    { data: { id: 'Joseph', name: 'Joseph'} },
+                    { data: { id: 'Fadi', name: 'Fadi'} }
                 ];
 				let edges = [
-                    { data: { source: 'j', target: 'e' } },
-                    { data: { source: 'j', target: 'k' } },
-                    { data: { source: 'j', target: 'g' } },
-                    { data: { source: 'e', target: 'm' } },
-                    { data: { source: 'e', target: 'p' } },
-                    { data: { source: 'e', target: 'l' } },
-                    { data: { source: 'e', target: 'ge' } },
-                    { data: { source: 'e', target: 'le' } },
-                    { data: { source: 'k', target: 'la' } },
-                    { data: { source: 'k', target: 'lo' } },
-                    { data: { source: 'm', target: 'ju' } },
-                    { data: { source: 'm', target: 's' } },
-                    { data: { source: 'm', target: 'd' } },
-                    { data: { source: 'm', target: 'jo' } },
-                    { data: { source: 'm', target: 'f' } }
+                    { data: { source: 'Jerry', target: 'Elaine' } },
+                    { data: { source: 'Jerry', target: 'Kramer' } },
+                    { data: { source: 'Jerry', target: 'George' } },
+                    { data: { source: 'Elaine', target: 'Martin' } },
+                    { data: { source: 'Elaine', target: 'Philippe' } },
+                    { data: { source: 'Elaine', target: 'Louis' } },
+                    { data: { source: 'Elaine', target: 'Genevieve' } },
+                    { data: { source: 'Elaine', target: 'Leo' } },
+                    { data: { source: 'Kramer', target: 'Larry' } },
+                    { data: { source: 'Kramer', target: 'Logaina' } },
+                    { data: { source: 'Martin', target: 'Julien' } },
+                    { data: { source: 'Martin', target: 'Sebastian' } },
+                    { data: { source: 'Martin', target: 'Denis' } },
+                    { data: { source: 'Martin', target: 'Joseph' } },
+                    { data: { source: 'Martin', target: 'Fadi' } }
                 ];
 
 				var cy = window.cy = cytoscape({
@@ -166,25 +179,35 @@
                         horizontalPadding: document.getElementById("hpadding").value,
                         verticalPadding: document.getElementById("vpadding").value,
                         fontSize: document.getElementById("fontSize").value,
-                        childrenSize: document.getElementById("childrenSize").value
+                        childrenSize: document.getElementById("childrenSize").value,
+                        horizontalSpread: document.getElementById("horizontal-spread").checked
                     });
                     layout.run();
 				}
+                let horizontalSpread = document.getElementById('horizontal-spread')
+                horizontalSpread.onchange = function () {
+                    runLayout();
+                };
+
 
 				function addOptionToSelect (selectID, name, id) {
                     let nodeSelector = document.getElementById(selectID);
                     nodeSelector.options[nodeSelector.options.length] = new Option(name, id);
 				}
-				function resetCheckboxes () {
+				function resetCheckboxes (name) {
                     document.getElementById("nodes-select").options.length = 0;
                     document.getElementById("nodes-select-remove").options.length = 0;
                     nodes.forEach((aNode) => {
                         addOptionToSelect("nodes-select", aNode.data.name, aNode.data.id)
                     });
+                    if (name) {
+                        document.getElementById("nodes-select").value = name;
+					}
                     edges.forEach((anEdge) => {
-                        if (anEdge.data.target === 'j') {
+                        let nameVal = name || 'Jerry';
+                        if (anEdge.data.target === nameVal) {
                             addNode(anEdge.data.source)
-                        } else if (anEdge.data.source === 'j' ) {
+                        } else if (anEdge.data.source === nameVal ) {
                             addNode(anEdge.data.target)
                         }
                         function addNode (id) {
@@ -209,19 +232,40 @@
                 buttonAdd.onclick = function () {
                     let parent = document.getElementById("nodes-select");
                     let inputAdd = document.getElementById("inputAdd");
+                    let isRootNode = document.getElementById("root-node");
+
+                    // Verify if the id already exists
+					let alreadyExists = nodes.some((aNode) => {
+					    return aNode.data.id === inputAdd.value;
+					});
+
+					if (!inputAdd.value) {
+                        alert('Please choose a valid name.');
+                        return;
+					}
+					if (alreadyExists) {
+					    alert('Please choose a name that does not exist already.');
+					    return;
+					}
 
 					// Add new value to cytoscape
 					cy.add([
 						{ group: 'nodes', data: { id: inputAdd.value, name: inputAdd.value }},
-						{ group: 'edges', data: { id: `${inputAdd.value}${parent.value}`, source: parent.value, target: inputAdd.value}}
 					]);
+					if (!isRootNode.checked) {
+                        cy.add([
+                            { group: 'edges', data: { id: `${inputAdd.value}${parent.value}`, source: parent.value, target: inputAdd.value}}
+                        ]);
+					}
 
                     runLayout();
 
                     // Add new value to DOM
                     nodes.push({data: { id: inputAdd.value, name: inputAdd.value }});
-                    edges.push({ data: { source: parent.value, target: inputAdd.value } });
-					resetCheckboxes();
+                    if (!isRootNode.checked) {
+                    	edges.push({ data: { source: parent.value, target: inputAdd.value } });
+                    }
+					resetCheckboxes(parent.value);
 				};
 
                 // Remove action
@@ -264,6 +308,8 @@
 			<div class="line">
 				<button id="buttonAdd" class="add">Add</button>
 				<input id="inputAdd" name="inputAdd" type="text" />
+				<input type="checkbox" id="root-node" />
+				<label for="root-node">Is root?</label>
 			</div>
 			<div class="line">
 				<button id="buttonRemove">Remove</button>
@@ -283,7 +329,7 @@
 			</div>
 			<div class="line">
 				<label for="vpadding">vertical padding: </label>
-				<input id="vpadding" name="vpadding" type="range" min="0" max="10000" step="1" value="2000" />
+				<input id="vpadding" name="vpadding" type="range" min="0" max="100000" step="1" value="2000" />
 				<div id="vpaddingValue" class="value"></div>
 			</div>
 			<div class="line">
@@ -295,6 +341,10 @@
 				<label for="fontSize">Font size: </label>
 				<input id="fontSize" name="fontSize" type="range" min="100" max="10000" step="1" value="1000" />
 				<div id="fontSizeValue" class="value"></div>
+			</div>
+			<div class="line">
+				<label for="horizontal-spread">horizontalSpread: </label>
+				<input id="horizontal-spread" name="horizontal-spread" type="checkbox" />
 			</div>
 		</div>
 
