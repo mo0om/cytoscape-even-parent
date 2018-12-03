@@ -85,6 +85,10 @@
 			label[for="root-node"] {
 				text-align: left;
 			}
+
+			hr {
+				width: 100%;
+			}
 		</style>
 
 		<script>
@@ -180,7 +184,8 @@
                         verticalPadding: document.getElementById("vpadding").value,
                         fontSize: document.getElementById("fontSize").value,
                         childrenSize: document.getElementById("childrenSize").value,
-                        horizontalSpread: document.getElementById("horizontal-spread").checked
+                        horizontalSpread: document.getElementById("horizontal-spread").checked,
+                        smart: document.getElementById("smart").checked
                     });
                     layout.run();
 				}
@@ -188,8 +193,11 @@
                 horizontalSpread.onchange = function () {
                     runLayout();
                 };
-
-
+                let smart = document.getElementById('smart')
+                smart.onchange = function () {
+                    runLayout();
+                };
+                smart
 				function addOptionToSelect (selectID, name, id) {
                     let nodeSelector = document.getElementById(selectID);
                     nodeSelector.options[nodeSelector.options.length] = new Option(name, id);
@@ -199,21 +207,11 @@
                     document.getElementById("nodes-select-remove").options.length = 0;
                     nodes.forEach((aNode) => {
                         addOptionToSelect("nodes-select", aNode.data.name, aNode.data.id)
+                        addOptionToSelect("nodes-select-remove", aNode.data.name, aNode.data.id);
                     });
                     if (name) {
                         document.getElementById("nodes-select").value = name;
 					}
-                    edges.forEach((anEdge) => {
-                        let nameVal = name || 'Jerry';
-                        if (anEdge.data.target === nameVal) {
-                            addNode(anEdge.data.source)
-                        } else if (anEdge.data.source === nameVal ) {
-                            addNode(anEdge.data.target)
-                        }
-                        function addNode (id) {
-                            addOptionToSelect("nodes-select-remove", cy.elements(`node#${id}`).data('name'), id);
-                        }
-                    });
 				};
                 resetCheckboxes();
 
@@ -301,6 +299,7 @@
 
 		<div id="cy"></div>
 		<div class="node-controller">
+			<hr>
 			<div class="line">
 				<label for="nodes-select">Parent: </label>
 				<select name="nodes-select" id="nodes-select"></select>
@@ -311,41 +310,49 @@
 				<input type="checkbox" id="root-node" />
 				<label for="root-node">Is root?</label>
 			</div>
+			<hr>
 			<div class="line">
 				<button id="buttonRemove">Remove</button>
 				<select name="nodes-select" id="nodes-select-remove"></select>
 			</div>
+			<hr>
 		</div>
 		<div class="sliders">
+			<hr>
 			<div class="line">
 				<label for="childrenSize">childrenSize: </label>
 				<input id="childrenSize" name="childrenSize" type="range" min="1" max="5" step=".01" value="1" />
 				<div id="childrenSizeValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="hpadding">horizontal padding: </label>
+				<label for="hpadding">horizontalPadding: </label>
 				<input id="hpadding" name="hpadding" type="range" min="0" max="100000" step="1" value="0" />
 				<div id="hpaddingValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="vpadding">vertical padding: </label>
+				<label for="vpadding">verticalPadding: </label>
 				<input id="vpadding" name="vpadding" type="range" min="0" max="100000" step="1" value="2000" />
 				<div id="vpaddingValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="edgeSize">Edge size: </label>
+				<label for="edgeSize">edgeSize: </label>
 				<input id="edgeSize" name="edgeSize" type="range" min="0" max="1000" step="1" value="200" />
 				<div id="edgeSizeValue" class="value"></div>
 			</div>
 			<div class="line">
-				<label for="fontSize">Font size: </label>
+				<label for="fontSize">fontSize: </label>
 				<input id="fontSize" name="fontSize" type="range" min="100" max="10000" step="1" value="1000" />
 				<div id="fontSizeValue" class="value"></div>
+			</div>
+			<div class="line">
+				<label for="fontSize">smart: </label>
+				<input id="smart" name="smart" type="checkbox" />
 			</div>
 			<div class="line">
 				<label for="horizontal-spread">horizontalSpread: </label>
 				<input id="horizontal-spread" name="horizontal-spread" type="checkbox" />
 			</div>
+			<hr>
 		</div>
 
 	</body>
