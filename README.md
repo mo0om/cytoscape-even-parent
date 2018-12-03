@@ -73,7 +73,7 @@ Add the layout on creation of the cytoscape instance. A few options are availabl
         fontSize: 1000,           // 0 to ~  ::: Size of font
         edgeSize: 200,            // 0 to ~  ::: Size of edge
         horizontalSpread: false,  // boolean ::: Spread the graph horizontally if true
-        smart: false              // boolean ::: Displays children in rows to get maximum node width
+        smart: false              // boolean ::: If true, displays children in rows to get maximum node width
     },
 ...
 ```
