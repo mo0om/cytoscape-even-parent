@@ -85,10 +85,10 @@ class Layout {
           {
             x: spaceBetweenTopNodes * i,
             y: 0
-          }
+          };
         let topNodeSize = options.horizontalSpread ?
           spaceBetweenTopNodes - options.verticalPadding :
-          spaceBetweenTopNodes - options.horizontalPadding
+          spaceBetweenTopNodes - options.horizontalPadding;
         topNode.position(center);
         if (topNodeSize < 1) {
           topNodeSize = 1;
@@ -157,14 +157,13 @@ class Layout {
             changingNode.position(nodePosition);
 
             // Fix edge width
-            let edgeSize = options.edgeSize * changingNode.width() / topNodes.first().width()
+            let edgeSize = options.edgeSize * changingNode.width() / topNodes.first().width();
             changingNode.connectedEdges().style('width', edgeSize);
             // Fix font size
             let topNodeFontSize = parseInt(topNodes.first().style("font-size"), 10);
             let newFontSize = topNodeFontSize * childrenWidth / topNodes.first().width();
             cy.elements(`node#${id}`).first().style("font-size", `${newFontSize}px`);
           });
-          console.log(options.verticalPadding, '>>>', key, " --- ", verticalPadding)
         }
       }
     }
