@@ -5,8 +5,8 @@ cytoscape-even-parent
 ## Description
 
 cytoscape tree layout extension to place children of a node evenly underneath it&#39;s parent ([demo](https://mo0om.github.io/cytoscape-even-parent))
-* ![Tree](images/tree.png)
-* ![Tree with the smart switch to true](images/smart.png)
+* Tree  ![Tree](images/tree.png)
+* With the `smart` option set to true  ![Tree with the smart option to true](images/smart.png)
 
 ## Dependencies
 
